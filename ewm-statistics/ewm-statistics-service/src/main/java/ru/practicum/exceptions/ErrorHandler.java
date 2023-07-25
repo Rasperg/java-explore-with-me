@@ -7,9 +7,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-
 @Slf4j
 @RestControllerAdvice
 public class ErrorHandler {
@@ -43,27 +40,13 @@ public class ErrorHandler {
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleOtherException(final RuntimeException e) {
         log.warn("Runtime Exception", e);
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-
-        return new ErrorResponse(
-                e.getMessage(),
-                sw.toString()
-        );
+        return ErrorResponse.createErrorResponse("Runtime Exception", e);
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public ErrorResponse handleException(final Exception e) {
         log.warn("Exception", e);
-        StringWriter sw = new StringWriter();
-        PrintWriter pw = new PrintWriter(sw);
-        e.printStackTrace(pw);
-
-        return new ErrorResponse(
-                e.getMessage(),
-                sw.toString()
-        );
+        return ErrorResponse.createErrorResponse("Exception", e);
     }
 }

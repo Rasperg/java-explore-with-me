@@ -48,7 +48,7 @@ public class EndpointHitServiceImpl implements EndpointHitService {
         List<ViewStat> result;
         if (unique) {
             if (uris.isEmpty()) {
-                result = endpointHitRepository.getViewStatsUnique(startDate, endDate);
+                result = endpointHitRepository.getViewStatsUnique(startDate, endDate, uris);
             } else {
                 result = endpointHitRepository.getViewStatsByUrisAndUnique(startDate, endDate, uris);
             }
