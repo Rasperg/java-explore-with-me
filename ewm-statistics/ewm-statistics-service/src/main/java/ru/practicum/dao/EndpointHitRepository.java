@@ -15,10 +15,9 @@ public interface EndpointHitRepository extends JpaRepository<EndpointHit, Long> 
     @Query(value = "SELECT new ru.practicum.model.ViewStat(e.uri, e.app, COUNT(DISTINCT e.ip)) " +
             "FROM EndpointHit e " +
             "WHERE e.timestamp BETWEEN :start AND :end " +
-            "AND e.uri IN :uris " +
             "GROUP BY e.app, e.uri " +
             "ORDER BY COUNT(e.ip) DESC")
-    List<ViewStat> getViewStatsUnique(LocalDateTime start, LocalDateTime end, List<String> uris);
+    List<ViewStat> getViewStatsUnique(LocalDateTime start, LocalDateTime end);
 
     @Query(value = "SELECT NEW ru.practicum.model.ViewStat(e.uri, e.app, COUNT(DISTINCT e.ip)) " +
             "FROM EndpointHit e " +
