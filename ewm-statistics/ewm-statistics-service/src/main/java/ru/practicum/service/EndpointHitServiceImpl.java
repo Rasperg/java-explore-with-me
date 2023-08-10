@@ -38,8 +38,8 @@ public class EndpointHitServiceImpl implements EndpointHitService {
     @Override
     @Transactional(readOnly = true)
     public List<ViewStatDto> getStats(String start, String end, List<String> uris, Boolean unique) {
-        LocalDateTime startDate = LocalDateTime.parse(URLDecoder.decode(start, StandardCharsets.UTF_8), FORMATTER);
-        LocalDateTime endDate = LocalDateTime.parse(URLDecoder.decode(end, StandardCharsets.UTF_8), FORMATTER);
+        LocalDateTime startDate = checkDate(start);
+        LocalDateTime endDate = checkDate(end);
 
         if (startDate.isAfter(endDate)) {
             throw new TimestampException("Время окончания не может быть раньше времени начала.");
@@ -63,5 +63,12 @@ public class EndpointHitServiceImpl implements EndpointHitService {
         return result.stream()
                 .map(ViewStatMapper::toViewStatDto)
                 .collect(Collectors.toList());
+    }
+
+    private LocalDateTime checkDate(String dateString) {
+        if (dateString == null) {
+            throw new TimestampException("Start date or end date cannot be null");
+        }
+        return LocalDateTime.parse(URLDecoder.decode(dateString, StandardCharsets.UTF_8), FORMATTER);
     }
 }
