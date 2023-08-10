@@ -257,7 +257,7 @@ public class EventServiceImpl implements EventService {
 
         Map<Long, Integer> hits = getStatsFromEvents(List.of(event));
         if (hits.get(eventId) == null) {
-            new ObjectNotFoundException(String.format("Event not found"));
+            throw new ObjectNotFoundException(String.format("Event not found"));
         } else {
             eventFullDto.setViews(hits.get(eventId));
         }
