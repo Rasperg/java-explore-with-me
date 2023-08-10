@@ -51,6 +51,7 @@ public class EventServiceImpl implements EventService {
     private final UserRepository userRepository;
     private final CategoryRepository categoryRepository;
     private final StatsClient statsClient;
+    private final String app = "ewm-main-service";
 
     @Override
     @Transactional
@@ -115,6 +116,7 @@ public class EventServiceImpl implements EventService {
         return eventFullDto;
     }
 
+    @Transactional
     @Override
     public EventFullDto updateEventByEventId(Long userId, Long eventId, UpdateEventRequest updateEventRequest) {
         userRepository.findById(userId).orElseThrow(
@@ -161,6 +163,7 @@ public class EventServiceImpl implements EventService {
         return eventFullDto;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<EventShortDto> getEvents(String text,
                                          List<Long> categories,
@@ -253,10 +256,15 @@ public class EventServiceImpl implements EventService {
         createHit(request);
 
         Map<Long, Integer> hits = getStatsFromEvents(List.of(event));
-        eventFullDto.setViews(hits.get(eventId));
+        if (hits.get(eventId) == null) {
+            new ObjectNotFoundException(String.format("Event not found"));
+        } else {
+            eventFullDto.setViews(hits.get(eventId));
+        }
         return eventFullDto;
     }
 
+    @Transactional(readOnly = true)
     @Override
     public List<EventFullDto> getEventsAdmin(List<Long> users, List<EventState> states, List<Long> categories, LocalDateTime rangeStart, LocalDateTime rangeEnd, Integer from, Integer size) {
         List<Event> result;
@@ -330,7 +338,6 @@ public class EventServiceImpl implements EventService {
     }
 
     private void createHit(HttpServletRequest request) {
-        String app = "ewm-main-service";
         statsClient.save(app, request.getRequestURI(), request.getRemoteAddr(),
                 LocalDateTime.now().format(DateTimeFormatter.ofPattern("yyyy-MM-dd HH:mm:ss")));
     }

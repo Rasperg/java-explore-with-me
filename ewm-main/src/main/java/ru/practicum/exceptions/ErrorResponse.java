@@ -11,12 +11,9 @@ import java.time.LocalDateTime;
 @Setter
 @Builder
 public class ErrorResponse {
-    private String status;
-
-    private String reason;
-
     private final String message;
-
+    private String status;
+    private String reason;
     @Builder.Default
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime timestamp = LocalDateTime.now();
