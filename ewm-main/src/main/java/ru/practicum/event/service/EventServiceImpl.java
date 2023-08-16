@@ -369,7 +369,7 @@ public class EventServiceImpl implements EventService {
                 () -> new ObjectNotFoundException(String.format("Event with id=%s was not found", eventId)));
 
         if (userId.equals(event.getInitiator().getId())) {
-            throw new ConflictException(String.format("User with id=%s is initiator of event with id=%s",
+            throw new ConflictException(String.format("User with id=%d is initiator of event with id=%d",
                     userId, eventId));
         }
 
