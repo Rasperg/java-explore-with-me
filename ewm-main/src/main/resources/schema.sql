@@ -70,3 +70,14 @@ CREATE TABLE IF NOT EXISTS compilation_events
     CONSTRAINT compilation_events_events_fk FOREIGN KEY (event_id) references events,
     CONSTRAINT unique_compilation_event UNIQUE (compilation_id, event_id)
 );
+
+CREATE TABLE IF NOT EXISTS ratings
+(
+    user_id      BIGINT  NOT NULL,
+    event_id     BIGINT  NOT NULL,
+    is_positive  BOOLEAN NOT NULL,
+    initiator_id BIGINT  NOT NULL,
+    PRIMARY KEY (user_id, event_id),
+    CONSTRAINT ratings_users_fk FOREIGN KEY (user_id) REFERENCES users,
+    CONSTRAINT ratings_events_fk FOREIGN KEY (event_id) references events
+);
